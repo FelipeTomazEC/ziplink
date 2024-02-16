@@ -1,0 +1,57 @@
+plugins {
+	id 'java'
+	id 'groovy'
+	id 'org.springframework.boot' version '3.2.2'
+	id 'io.spring.dependency-management' version '1.1.4'
+}
+
+group = 'com.github.felipetomazec'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	sourceCompatibility = '17'
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+sourceSets {
+	integrationTest {
+		groovy.srcDirs = ['src/integration-test/groovy']
+		resources.srcDirs = ['src/integration-test/resources']
+		compileClasspath += sourceSets.main.output
+	}
+}
+
+configurations {
+	integrationTestImplementation.extendsFrom testImplementation
+	integrationTestRuntime.extendsFrom testRuntime
+	integrationTestCompileOnly.extendsFrom compileOnly
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	compileOnly 'org.projectlombok:lombok'
+	runtimeOnly 'org.postgresql:postgresql'
+	annotationProcessor 'org.projectlombok:lombok'
+
+	//Configure spock framework for testing
+	implementation platform('org.apache.groovy:groovy-bom:4.0.5')
+	implementation 'org.apache.groovy:groovy'
+	testImplementation platform("org.spockframework:spock-bom:2.3-groovy-4.0")
+	testImplementation "org.spockframework:spock-core"
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'net.datafaker:datafaker:2.0.2'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
