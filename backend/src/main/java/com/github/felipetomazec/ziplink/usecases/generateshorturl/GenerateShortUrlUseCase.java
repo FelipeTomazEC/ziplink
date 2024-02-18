@@ -1,5 +1,6 @@
 package com.github.felipetomazec.ziplink.usecases.generateshorturl;
 
+import com.github.felipetomazec.ziplink.config.ShortURLConfig;
 import com.github.felipetomazec.ziplink.entities.ShortURL;
 import com.github.felipetomazec.ziplink.repositories.ExistsRepository;
 import com.github.felipetomazec.ziplink.repositories.SaveRepository;
@@ -11,18 +12,19 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class GenerateShortUrlUseCase implements UseCase<GenerateShortUrlInput, GenerateShortUrlOutput> {
-    public static final int HASH_SIZE = 12;
-
     private final ExistsRepository<ShortURL, String> existsRepo;
     private final SaveRepository<ShortURL> saveRepo;
+    private final ShortURLConfig config;
 
     @Override
     public GenerateShortUrlOutput execute(GenerateShortUrlInput input) {
-        var shortUrl = URLHashGenerator.hash(input.longUrl(), HASH_SIZE);
+        var hash = URLHashGenerator.hash(input.longUrl(), config.getLength());
 
-        if (!existsRepo.exists(shortUrl)) {
-            saveRepo.save(new ShortURL(shortUrl, input.longUrl()));
+        if (!existsRepo.exists(hash)) {
+            saveRepo.save(new ShortURL(hash, input.longUrl()));
         }
+
+        var shortUrl = config.getBaseUrl().concat(hash);
 
         return new GenerateShortUrlOutput(shortUrl);
     }

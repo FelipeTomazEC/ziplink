@@ -1,5 +1,6 @@
 package com.github.felipetomazec.ziplink.usecases
 
+import com.github.felipetomazec.ziplink.config.ShortURLConfig
 import com.github.felipetomazec.ziplink.entities.ShortURL
 import com.github.felipetomazec.ziplink.repositories.ExistsRepository
 import com.github.felipetomazec.ziplink.repositories.SaveRepository
@@ -14,9 +15,14 @@ class GenerateShortUrlUseCaseTest extends Specification {
     def faker = new Faker()
     def existsRepository = Mock(ExistsRepository<ShortURL, String>)
     def saveRepository = Mock(SaveRepository<ShortURL>)
+    def config = new ShortURLConfig("https://ziplink.com/", 12)
 
     @Subject
-    def sut = new GenerateShortUrlUseCase(existsRepository, saveRepository)
+    def sut = new GenerateShortUrlUseCase(
+            existsRepository,
+            saveRepository,
+            config
+    )
 
     def "Short url generation"() {
         given:
@@ -30,12 +36,13 @@ class GenerateShortUrlUseCaseTest extends Specification {
         def output = sut.execute(input)
 
         then:
-        output.shortUrl().size() == GenerateShortUrlUseCase.HASH_SIZE
+        output.shortUrl().startsWith(config.baseUrl)
+        output.shortUrl().split("/").last().size() == config.length
 
         and:
         1 * saveRepository.save({ ShortURL it ->
             it.longUrl == input.longUrl()
-            it.shortUrl == URLHashGenerator.hash(input.longUrl(), 12)
+            it.shortUrl == URLHashGenerator.hash(input.longUrl(), config.length)
         })
     }
 
@@ -45,8 +52,8 @@ class GenerateShortUrlUseCaseTest extends Specification {
         def input = new GenerateShortUrlInput(longUrl)
 
         and: "short url already exists"
-        def hashSize = GenerateShortUrlUseCase.HASH_SIZE
-        existsRepository.exists(URLHashGenerator.hash(longUrl, hashSize)) >> true
+        def hash = URLHashGenerator.hash(longUrl, config.length)
+        existsRepository.exists(hash) >> true
 
         when:
         def output = sut.execute(input)

@@ -1,3 +1,7 @@
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
+
+ziplink:
+  short-url-config:
+    base-url: https://localhost:8080/
