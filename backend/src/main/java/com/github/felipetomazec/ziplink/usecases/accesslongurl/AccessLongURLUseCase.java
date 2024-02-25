@@ -11,14 +11,12 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AccessLongURLUseCase implements UseCase<AccessLongURLInput, AccessLongURLOutput> {
 
-    private final ShortURLConfig config;
     private final FindByIdRepository<ShortURL, String> repository;
 
     @Override
     public AccessLongURLOutput execute(AccessLongURLInput input) {
-        var shortUrlCode = input.shortUrl().replace(config.getBaseUrl(), "");
-        var shortURL = repository.findById(shortUrlCode)
-                .orElseThrow(() -> new InvalidShortURLException(input.shortUrl()));
+        var shortURL = repository.findById(input.shortUrlCode())
+                .orElseThrow(() -> new InvalidShortURLException(input.shortUrlCode()));
 
         return new AccessLongURLOutput(shortURL.getLongUrl());
     }

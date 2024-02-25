@@ -1,6 +1,6 @@
 package com.github.felipetomazec.ziplink.usecases
 
-import com.github.felipetomazec.ziplink.config.ShortURLConfig
+
 import com.github.felipetomazec.ziplink.entities.ShortURL
 import com.github.felipetomazec.ziplink.repositories.FindByIdRepository
 import com.github.felipetomazec.ziplink.usecases.accesslongurl.AccessLongURLInput
@@ -12,16 +12,14 @@ import spock.lang.Subject
 
 class AccessLongURLUseCaseTest extends Specification {
     def faker = new Faker()
-    def config = new ShortURLConfig(baseUrl: "http://www.ziplink.com/")
     def repository = Mock(FindByIdRepository<ShortURL, String>)
 
     @Subject
-    def sut = new AccessLongURLUseCase(config, repository)
+    def sut = new AccessLongURLUseCase(repository)
 
     def "Long url ist retrieved"() {
         given:
         def code = "abcd1234"
-        def shortURL = config.baseUrl.concat(code)
 
         and:
         def longURL = faker.internet().url()
@@ -29,7 +27,7 @@ class AccessLongURLUseCaseTest extends Specification {
         1 * repository.findById(code) >> Optional.of(dbEntry)
 
         when:
-        def output = sut.execute(new AccessLongURLInput(shortURL))
+        def output = sut.execute(new AccessLongURLInput(code))
 
         then:
         output.longUrl() == longURL
@@ -38,16 +36,15 @@ class AccessLongURLUseCaseTest extends Specification {
     def "Invalid short url"() {
         given:
         def code = "1245fff%"
-        def shortUrl = config.baseUrl.concat(code)
 
         and:
         1 * repository.findById(code) >> Optional.empty()
 
         when:
-        sut.execute(new AccessLongURLInput(shortUrl))
+        sut.execute(new AccessLongURLInput(code))
 
         then:
         def exception = thrown(InvalidShortURLException)
-        exception.message.contains(shortUrl)
+        exception.message.contains(code)
     }
 }
