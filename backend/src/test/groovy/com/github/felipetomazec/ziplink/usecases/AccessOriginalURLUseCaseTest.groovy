@@ -3,14 +3,14 @@ package com.github.felipetomazec.ziplink.usecases
 
 import com.github.felipetomazec.ziplink.entities.ShortURL
 import com.github.felipetomazec.ziplink.repositories.FindByIdRepository
-import com.github.felipetomazec.ziplink.usecases.accesslongurl.AccessLongURLInput
-import com.github.felipetomazec.ziplink.usecases.accesslongurl.AccessLongURLUseCase
-import com.github.felipetomazec.ziplink.usecases.accesslongurl.InvalidShortURLException
+import com.github.felipetomazec.ziplink.usecases.accessoriginalurl.AccessLongURLInput
+import com.github.felipetomazec.ziplink.usecases.accessoriginalurl.AccessLongURLUseCase
+import com.github.felipetomazec.ziplink.usecases.accessoriginalurl.InvalidShortURLException
 import net.datafaker.Faker
 import spock.lang.Specification
 import spock.lang.Subject
 
-class AccessLongURLUseCaseTest extends Specification {
+class AccessOriginalURLUseCaseTest extends Specification {
     def faker = new Faker()
     def repository = Mock(FindByIdRepository<ShortURL, String>)
 

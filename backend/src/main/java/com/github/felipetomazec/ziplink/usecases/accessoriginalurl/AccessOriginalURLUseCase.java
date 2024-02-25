@@ -1,6 +1,5 @@
-package com.github.felipetomazec.ziplink.usecases.accesslongurl;
+package com.github.felipetomazec.ziplink.usecases.accessoriginalurl;
 
-import com.github.felipetomazec.ziplink.config.ShortURLConfig;
 import com.github.felipetomazec.ziplink.entities.ShortURL;
 import com.github.felipetomazec.ziplink.repositories.FindByIdRepository;
 import com.github.felipetomazec.ziplink.usecases.UseCase;

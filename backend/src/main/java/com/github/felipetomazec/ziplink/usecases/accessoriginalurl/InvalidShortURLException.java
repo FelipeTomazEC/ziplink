@@ -1,4 +1,4 @@
-package com.github.felipetomazec.ziplink.usecases.accesslongurl;
+package com.github.felipetomazec.ziplink.usecases.accessoriginalurl;
 
 public class InvalidShortURLException extends RuntimeException {
     public InvalidShortURLException(String url) {
