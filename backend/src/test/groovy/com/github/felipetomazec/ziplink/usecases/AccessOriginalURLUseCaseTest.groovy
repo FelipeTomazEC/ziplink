@@ -3,8 +3,8 @@ package com.github.felipetomazec.ziplink.usecases
 
 import com.github.felipetomazec.ziplink.entities.ShortURL
 import com.github.felipetomazec.ziplink.repositories.FindByIdRepository
-import com.github.felipetomazec.ziplink.usecases.accessoriginalurl.AccessLongURLInput
-import com.github.felipetomazec.ziplink.usecases.accessoriginalurl.AccessLongURLUseCase
+import com.github.felipetomazec.ziplink.usecases.accessoriginalurl.AccessOriginalURLInput
+import com.github.felipetomazec.ziplink.usecases.accessoriginalurl.AccessOriginalURLUseCase
 import com.github.felipetomazec.ziplink.usecases.accessoriginalurl.InvalidShortURLException
 import net.datafaker.Faker
 import spock.lang.Specification
@@ -15,7 +15,7 @@ class AccessOriginalURLUseCaseTest extends Specification {
     def repository = Mock(FindByIdRepository<ShortURL, String>)
 
     @Subject
-    def sut = new AccessLongURLUseCase(repository)
+    def sut = new AccessOriginalURLUseCase(repository)
 
     def "Long url ist retrieved"() {
         given:
@@ -27,7 +27,7 @@ class AccessOriginalURLUseCaseTest extends Specification {
         1 * repository.findById(code) >> Optional.of(dbEntry)
 
         when:
-        def output = sut.execute(new AccessLongURLInput(code))
+        def output = sut.execute(new AccessOriginalURLInput(code))
 
         then:
         output.longUrl() == longURL
@@ -41,7 +41,7 @@ class AccessOriginalURLUseCaseTest extends Specification {
         1 * repository.findById(code) >> Optional.empty()
 
         when:
-        sut.execute(new AccessLongURLInput(code))
+        sut.execute(new AccessOriginalURLInput(code))
 
         then:
         def exception = thrown(InvalidShortURLException)
