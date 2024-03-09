@@ -4,5 +4,4 @@ spring:
 
 ziplink:
   short-url-config:
-    base-url: https://localhost:8080/
     length: 12

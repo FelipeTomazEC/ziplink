@@ -1,5 +1,9 @@
+ziplink:
+  short-url-config:
+    base-url: http://localhost:8080/
+
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/ziplink
+    url: jdbc:postgresql://database:5432/ziplink
     username: ziplink_admin
     password: 123456789
