@@ -1,5 +1,6 @@
 ziplink:
   short-url-config:
+    base-url: ${SHORT_BASE_URL}
     length: 12
 
 spring:
