@@ -7,6 +7,9 @@ services:
       context: .
     environment:
       SPRING_PROFILES_ACTIVE: docker
+      DATABASE_URL: jdbc:postgresql://database:5432/ziplink
+      DATABASE_USERNAME: ziplink_admin
+      DATABASE_PASSWORD: 123456789
     ports:
       - "8080:8080"
     depends_on:
